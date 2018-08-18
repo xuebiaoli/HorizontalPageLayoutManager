@@ -5,13 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.support.v7.widget.RecyclerView.State;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -19,16 +14,14 @@ import android.view.View;
  */
 public class PagingItemDecoration extends RecyclerView.ItemDecoration {
 
-    private static final int[] ATTRS = new int[]{android.R.attr.listDivider};
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.listDivider
+    };
+
     private Drawable mDivider;
 
-    PageDecorationLastJudge mPageDecorationLastJudge;
+    public PagingItemDecoration(Context context) {
 
-    public PagingItemDecoration(Context context, PageDecorationLastJudge pageDecorationLastJudge) {
-        if (pageDecorationLastJudge == null) {
-            throw new IllegalArgumentException("pageDecorationLastJudge must be no null");
-        }
-        mPageDecorationLastJudge = pageDecorationLastJudge;
         final TypedArray a = context.obtainStyledAttributes(ATTRS);
         mDivider = a.getDrawable(0);
         a.recycle();
@@ -40,9 +33,7 @@ public class PagingItemDecoration extends RecyclerView.ItemDecoration {
         drawVertical(c, parent);
     }
 
-
-
-    public void drawHorizontal(Canvas c, RecyclerView parent) {
+    private void drawHorizontal(Canvas c, RecyclerView parent) {
         int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
@@ -58,7 +49,7 @@ public class PagingItemDecoration extends RecyclerView.ItemDecoration {
         }
     }
 
-    public void drawVertical(Canvas c, RecyclerView parent) {
+    private void drawVertical(Canvas c, RecyclerView parent) {
         final int childCount = parent.getChildCount();
         for (int i = 0; i < childCount; i++) {
             final View child = parent.getChildAt(i);
@@ -78,20 +69,26 @@ public class PagingItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
         int itemPosition = parent.getChildAdapterPosition(view);
-        if (mPageDecorationLastJudge.isPageLast(itemPosition)) {
-            outRect.set(0, 0, 0, 0);
-        } else if (mPageDecorationLastJudge.isLastRow(itemPosition))// 如果是最后一行，则不需要绘制底部
-        {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
-        } else if (mPageDecorationLastJudge.isLastColumn(itemPosition))// 如果是最后一列，则不需要绘制右边
-        {
-            outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+
+        RecyclerView.LayoutManager h = parent.getLayoutManager();
+
+        if (h instanceof HorizontalPageLayoutManager) {
+            HorizontalPageLayoutManager hplm = (HorizontalPageLayoutManager) h;
+
+            if (hplm.isPageLast(itemPosition)) {
+                outRect.set(0, 0, 0, 0);
+            } else if (hplm.isLastRow(itemPosition)) {
+                // 如果是最后一行，则不需要绘制底部
+                outRect.set(0, 0, mDivider.getIntrinsicWidth(), 0);
+            } else if (hplm.isLastColumn(itemPosition)) {
+                // 如果是最后一列，则不需要绘制右边
+                outRect.set(0, 0, 0, mDivider.getIntrinsicHeight());
+            } else {
+                outRect.set(0, 0, mDivider.getIntrinsicWidth(),
+                        mDivider.getIntrinsicHeight());
+            }
         } else {
-            outRect.set(0, 0, mDivider.getIntrinsicWidth(),
-                    mDivider.getIntrinsicHeight());
+            outRect.set(0, 0, mDivider.getIntrinsicWidth(), mDivider.getIntrinsicHeight());
         }
-
     }
-
-
 }

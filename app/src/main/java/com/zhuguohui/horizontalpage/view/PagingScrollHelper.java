@@ -11,11 +11,12 @@ import android.view.View;
 /**
  * 实现RecycleView分页滚动的工具类
  * Created by zhuguohui on 2016/11/10.
+ *
+ * @author tiger
  */
-
 public class PagingScrollHelper {
 
-    RecyclerView mRecyclerView = null;
+    private RecyclerView mRecyclerView = null;
 
     private MyOnScrollListener mOnScrollListener = new MyOnScrollListener();
 
@@ -23,12 +24,17 @@ public class PagingScrollHelper {
     private int offsetY = 0;
     private int offsetX = 0;
 
-    int startY = 0;
-    int startX = 0;
+    private int startY = 0;
+    private int startX = 0;
 
 
     enum ORIENTATION {
-        HORIZONTAL, VERTICAL, NULL
+        // 水平滚动
+        HORIZONTAL,
+        // 垂直
+        VERTICAL,
+        //
+        NULL
     }
 
     private ORIENTATION mOrientation = ORIENTATION.HORIZONTAL;
@@ -41,12 +47,11 @@ public class PagingScrollHelper {
         //处理滑动
         recycleView.setOnFlingListener(mOnFlingListener);
         //设置滚动监听，记录滚动的状态，和总的偏移量
-        recycleView.setOnScrollListener(mOnScrollListener);
+        recycleView.addOnScrollListener(mOnScrollListener);
         //记录滚动开始的位置
         recycleView.setOnTouchListener(mOnTouchListener);
         //获取滚动的方向
         updateLayoutManger();
-
     }
 
     public void updateLayoutManger() {
@@ -82,13 +87,12 @@ public class PagingScrollHelper {
             if (mOrientation == ORIENTATION.VERTICAL && mRecyclerView.computeVerticalScrollExtent() != 0) {
                 return mRecyclerView.computeVerticalScrollRange() / mRecyclerView.computeVerticalScrollExtent();
             } else if (mRecyclerView.computeHorizontalScrollExtent() != 0) {
-                Log.i("zzz","rang="+mRecyclerView.computeHorizontalScrollRange()+" extent="+mRecyclerView.computeHorizontalScrollExtent());
+                Log.i("zzz", "rang=" + mRecyclerView.computeHorizontalScrollRange() + " extent=" + mRecyclerView.computeHorizontalScrollExtent());
                 return mRecyclerView.computeHorizontalScrollRange() / mRecyclerView.computeHorizontalScrollExtent();
             }
         }
         return 0;
     }
-
 
 
     ValueAnimator mAnimator = null;

@@ -5,23 +5,21 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
 
 /**
  * Created by zhuguohui on 2016/11/9.
+ * @author tiger
  */
-
-public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager implements PageDecorationLastJudge {
+public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager {
     @Override
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return null;
     }
 
-    int totalHeight = 0;
-    int totalWidth = 0;
-    int offsetY = 0;
-    int offsetX = 0;
+    private int totalHeight = 0;
+    private int totalWidth = 0;
+    private int offsetY = 0;
+    private int offsetX = 0;
 
     public HorizontalPageLayoutManager(int rows, int columns) {
         this.rows = rows;
@@ -61,14 +59,14 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         return getHeight() - getPaddingTop() - getPaddingBottom();
     }
 
-    int rows = 0;
-    int columns = 0;
-    int pageSize = 0;
-    int itemWidth = 0;
-    int itemHeight = 0;
-    int onePageSize = 0;
-    int itemWidthUsed;
-    int itemHeightUsed;
+    private int rows = 0;
+    private int columns = 0;
+    private int pageSize = 0;
+    private int itemWidth = 0;
+    private int itemHeight = 0;
+    private int onePageSize = 0;
+    private int itemWidthUsed;
+    private int itemHeightUsed;
 
 
     @Override
@@ -129,8 +127,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
                     int y = r * itemHeight;
                     rect.set(x, y, width + x, height + y);
                     allItemFrames.put(index, rect);
-
-
                 }
             }
             //每一页循环以后就回收一页的View用于下一页的使用
@@ -181,8 +177,11 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
 
     }
 
-
-    @Override
+    /**
+     * 是否最后一行
+     * @param index
+     * @return
+     */
     public boolean isLastRow(int index) {
         if (index >= 0 && index < getItemCount()) {
             int indexOfPage = index % onePageSize;
@@ -195,7 +194,11 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         return false;
     }
 
-    @Override
+    /**
+     * 最后一列
+     * @param position
+     * @return
+     */
     public boolean isLastColumn(int position) {
         if (position >= 0 && position < getItemCount()) {
             position++;
@@ -206,7 +209,11 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager impl
         return false;
     }
 
-    @Override
+    /**
+     * 最后一列
+     * @param position
+     * @return
+     */
     public boolean isPageLast(int position) {
         position++;
         return position % onePageSize == 0;

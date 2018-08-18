@@ -4,17 +4,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.zhuguohui.horizontalpage.adapter.MyAdapter;
-import com.zhuguohui.horizontalpage.view.DividerGridItemDecoration;
 import com.zhuguohui.horizontalpage.view.DividerItemDecoration;
 import com.zhuguohui.horizontalpage.view.HorizontalPageLayoutManager;
-import com.zhuguohui.horizontalpage.view.PageDecorationLastJudge;
 import com.zhuguohui.horizontalpage.view.PagingItemDecoration;
 import com.zhuguohui.horizontalpage.view.PagingScrollHelper;
 
@@ -32,19 +29,19 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        rg_layout = (RadioGroup) findViewById(R.id.rg_layout);
+        rg_layout = findViewById(R.id.rg_layout);
         rg_layout.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switchLayout(checkedId);
             }
         });
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        tv_page_total = (TextView) findViewById(R.id.tv_page_total);
-        btnUpdate = (Button) findViewById(R.id.btn_update);
+        tv_title = findViewById(R.id.tv_title);
+        tv_page_total = findViewById(R.id.tv_page_total);
+        btnUpdate = findViewById(R.id.btn_update);
         btnUpdate.setOnClickListener(this);
         myAdapter = new MyAdapter();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView = findViewById(R.id.recyclerview);
         recyclerView.setAdapter(myAdapter);
         scrollHelper.setUpRecycleView(recyclerView);
         scrollHelper.setOnPageChangeListener(this);
@@ -57,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
                 tv_page_total.setText("共" + scrollHelper.getPageCount() + "页");
             }
         });
-
     }
 
     private RecyclerView.ItemDecoration lastItemDecoration = null;
@@ -76,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
         vLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         horizontalPageLayoutManager = new HorizontalPageLayoutManager(3, 4);
-        pagingItemDecoration = new PagingItemDecoration(this, horizontalPageLayoutManager);
+        pagingItemDecoration = new PagingItemDecoration(this);
 
     }
 
@@ -96,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
                 layoutManager = hLinearLayoutManager;
                 itemDecoration = hDividerItemDecoration;
                 break;
+            default:
+                break;
         }
         if (layoutManager != null) {
             recyclerView.setLayoutManager(layoutManager);
@@ -105,8 +103,6 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
             scrollHelper.scrollToPosition(0);
             lastItemDecoration = itemDecoration;
         }
-
-
     }
 
 
@@ -127,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
             case R.id.btn_update:
                 updateData();
                 break;
+            default:
+                break;
         }
     }
 
@@ -142,6 +140,4 @@ public class MainActivity extends AppCompatActivity implements PagingScrollHelpe
             }
         });
     }
-
-
 }
