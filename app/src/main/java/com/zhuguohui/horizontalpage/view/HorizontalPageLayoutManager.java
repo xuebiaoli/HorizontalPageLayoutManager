@@ -32,7 +32,6 @@ public class HorizontalPageLayoutManager extends RecyclerView.LayoutManager {
         return true;
     }
 
-
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
         detachAndScrapAttachedViews(recycler);
